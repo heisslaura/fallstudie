@@ -1,0 +1,118 @@
+
+.content_title1 {
+	font-size: 46px;
+	font-weight: 700;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.2;
+	letter-spacing: -1.15px;
+	color: #223a9d;
+}
+.content_title2 {
+	font-size: 46px;
+	font-weight: 300;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.2;
+	letter-spacing: -1.15px;
+	color: #223a9d;
+}
+
+.content_title_desc_type1 {
+	font-size: 16px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
+	color: #738dc7;
+}
+.content_title_desc_type1 span {
+	color: #ff2f2f;
+}
+
+
+.content_sub_title1 {
+	font-size: 24px;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.25;
+	letter-spacing: normal;
+	color: #223a9d;
+}
+.content_sub_title2 {
+	font-size: 16px;
+	font-weight: 700;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.88;
+	letter-spacing: normal;
+	color: #223a9d;
+}
+
+.content_sub_title2_desc_type1{
+  font-size: 12px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 2.5;
+  letter-spacing: normal;
+  color: #738dc7;
+}
+
+.content_sub_title2_info_txt {
+  font-size: 14px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 2.14;
+  letter-spacing: normal;
+  color: #212121;
+}
+
+.content_sub_title3 {
+	font-size: 20px;
+	font-weight: 300;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
+	color: #4e64c0;
+}
+
+.data_md5_download_btn {
+	width: 219px;
+	height: 56px;
+	padding-top: 15px;
+	margin: 0px auto;
+	font-size: 20px;
+	font-weight: 500;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.2;
+	letter-spacing: normal;
+	color: #223a9d;
+	border-radius: 8px;
+	border: solid 1px #4e64c0;
+	background-color: #fefefe;
+	text-align: center;
+	cursor: pointer;
+	background-image: url("../images/icon_md5sum.png");
+}
+.data_md5_download_btn a {
+	text-decoration: none;
+}
+.data_md5_download_btn:hover {
+	font-size: 20px;
+	font-weight: 500;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.2;
+	letter-spacing: normal;
+	color: #ffffff;
+	border-radius: 8px;
+	border: solid 1px #4e64c0;
+	background-color: #4e64c0;
+	background-image: url("../images/icon_md5sum2.png");
+}
+
+
+

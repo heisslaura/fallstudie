@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="Macrogen">
+<title>MACROGEN NGS Report</title>
+<link rel="shortcut icon" type="image/x-icon" href="../images/ic/macrogen_favicon.ico">
+
+<link href="../css/w3.css" rel="stylesheet">
+<link href="../css/main.css" rel="stylesheet">
+<style>
+.d3ChartBar { fill: #40bfbd; }
+.d3HighLightTxt {
+	font-size: 14px;
+	fill: #008e8c;
+}
+.d3ChartYGridline line {
+	stroke: #9e9e9e;
+	stroke-opacity: 0.7;
+	stroke-dasharray: 3,3;
+}
+.d3ChartToolTip {
+	position: absolute;
+	width:234px;
+	border: 1px solid #4e64c0;
+	background-color: white;
+	text-align: center;
+	font-size: 18px;
+}
+.d3TopAxis text{
+	font-size: 12px;
+	fill: #9e9e9e;
+}
+.d3TopAxis line{
+	stroke: #9e9e9e;
+}
+.d3LeftAxis text{
+	font-size: 13px;
+	fill: #616161;
+}
+
+.d3ChartToolTipHeader {
+	font-weight: bold;
+}
+
+.d3ChartToolTipValue {
+	font-weight: bold;
+	fill: #008e8c;
+}
+
+body{
+	background-color: #ffffff;
+}
+body::-webkit-scrollbar {
+	width: 8px;
+}
+body::-webkit-scrollbar-thumb {
+	background-color: #7F90D6;
+	border-radius: 10px;
+	background-clip: padding-box;
+	border: 2px solid transparent;
+}
+body::-webkit-scrollbar-track {
+	background-color: #E6E6E6;
+	border-radius: 10px;
+	box-shadow: inset 0px 0px 5px white;
+}
+</style>
+
+<script src="../js/domdata.js"></script>
+</head>
+<body style="background-color: #ffffff;">
+
+<!-- Content -->
+<div class="w3-display-container w3-border-right" style="width: 1366px; margin: 0px; padding: 0px;"><!-- --------------------------------Start-------------------------------- -->
+
+
+		
+		<div class="w3-row">
+			<div class="w3-col l12">
+				<div style="margin-left: 50px; margin-top: 24px;">
+					<span style="font-size: 36px; font-weight: 500; color: #223a9d;">Total Bases</span>
+					<span style="margin-left: 20px; font-size: 16px; font-weight: bold; color: #223a9d;">
+						Total&nbsp;number&nbsp;of&nbsp;samples: <script>document.write(numberOfSample);</script>
+					</span>
+					<a class="w3-right" href="javascript:void(0)" onclick="closePopUpWindow();">
+						<img src="../images/icon_popup_times.png" style="margin-right: 63px;">
+					</a>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class="w3-row">
+			<div class="w3-col l12">
+				<div class="w3-panel w3-display-container" style="background-color: #e4effd;">
+					<p style="margin-left: 50px; font-size: 12px; color: #738dc7;">
+						You can hover over the bars to see the data values.
+					</p>
+					<div class="w3-display-right">
+						<img src="../images/icon_total_reads_box.png" alt="">&nbsp;
+						<span id="chart_unit_span" style="margin-right:50px; font-size: 14px; color: #212121;"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div class="w3-row">
+			<div id="popup_chart_area_div" class="w3-col l12">
+				
+			</div>
+		</div>
+		
+		
+		
+		
+		<div class="d3ChartToolTip" style="background: none; border: none; display: none;">
+			<svg viewBox="5 5 230 125" width="230" height="125" style="-webkit-filter: drop-shadow( 4px 4px 3px rgba(0, 0, 0, 0.7)); filter: drop-shadow( 4px 4px 3px rgba(0, 0, 0, 0.7));">
+			  <path d="M 10 5 C 7 5 5 7 5 10 L 5 100 C 5 103 7 105 10 105 L 190 105 L 180 130 L 210 105 L 230 105 C 233 105 235 103 235 100 L 235 10 C 235 7 233 5 230 5 L 10 5 Z" 
+			  stroke="#099896" stroke-width="0.2" fill="#ffffff" />
+				<text class="d3ChartToolTipHeader"></text>
+				<text class="d3ChartToolTipName"></text>
+				<text class="d3ChartToolTipUnit"></text>
+				<text class="d3ChartToolTipValue"></text>
+			</svg>
+		</div>
+		<div class="top-btn">
+            <a href="#">TOP</a>
+        </div>
+		<div style="margin-top: 60px; width: 100%; height: 90px; padding-top:37px; display: table; text-align: center;">
+			<div style="display: table-cell; vertical-align: middle; font-size: 12px;">
+					<span style="color: #9e9e9e;">Copyright&nbsp;©&nbsp;
+						<script>
+							var copyRightInfo = "";
+								switch(countryCode){
+									case "KR" : { copyRightInfo = dateReported.split('.')[0]+ "&nbsp;Macrogen,&nbsp;Inc."; }; break;
+									case "US" : { copyRightInfo = dateReported.split('.')[0]+ "&nbsp;Psomagen,&nbsp;Inc."; }; break;
+									case "JP" : { copyRightInfo = dateReported.split('.')[0]+ "&nbsp;Macrogen,&nbsp;Inc."; }; break;
+									case "SG" : { copyRightInfo = dateReported.split('.')[0]+ "&nbsp;Macrogen,&nbsp;Inc."; }; break;
+									case "EU" : { copyRightInfo = dateReported.split('.')[0]+ "&nbsp;Macrogen,&nbsp;Inc."; }; break;
+									default : { copyRightInfo = dateReported.split('.')[0]+ "&nbsp;Macrogen,&nbsp;Inc."; }; break;
+								}
+							document.write(copyRightInfo);
+						</script>
+					</span>
+					<span style="font-weight: bold; color: #424242;">Research Use Only.</span>
+			</div>
+		</div>
+
+		
+
+
+
+
+</div><!-- --------------------------------End-------------------------------- -->
+
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/d3.v4.min.js"></script>
+	<script src="../js/public.js"></script>
+	<script src="../js/submenu.js"></script>
+	<script src="../js/aRtotalReadBasesPopUp.js"></script>
+
+</body>
+</html>
