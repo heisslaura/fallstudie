@@ -73,6 +73,14 @@ def convert_excel_to_qiime_metadata():
     
     df['subject'] = df['subject'].map(subject_mapping)
     
+# Set 'sample-type' for controls 
+    # For positive control (E-coli)
+    df.loc[df['subject'] == 'E-coli', 'sample-type'] = 'Positive-Control'
+    
+    # For negative control (H2O)
+    df.loc[df['subject'] == 'H2O', 'sample-type'] = 'Negative-Control'
+
+
     print(f"Anonymized subject names: {df['subject'].unique()}")
     
     # Set sample-id as index
@@ -96,6 +104,8 @@ def convert_excel_to_qiime_metadata():
     # Define column types for QIIME2
     column_types = []
     for col in df.columns:
+        # Check for column type based on potential usage in QIIME 2
+        # 'sample-type' is now explicitly categorical for control/real samples
         if col in ['age', 'din', 'seq-pos', 'tooth-number', 'replicate']:
             column_types.append('numeric')
         else:

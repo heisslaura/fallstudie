@@ -21,5 +21,5 @@ EF1	18	Horse-3	Gum	1.0	uppper jaw left	1.0	S	16.0	diseased	6.9
 EF2	19	Horse-3	Gum	2.0	upper jaw right	2.0	S	16.0	diseased	7.4
 EF3	20	Horse-3	Gum	3.0	upper jaw right	3.0	S	16.0	diseased	7.4
 EF4	21	Horse-3	Gum	1.0	up left	4.0	S	16.0	diseased	6.3
-PK	22	E-coli	-		-		-		-	8.4
-NK	23	H2O	-		-		-		-	
+PK	22	E-coli	Positive-Control		-		-		-	8.4
+NK	23	H2O	Negative-Control		-		-		-	

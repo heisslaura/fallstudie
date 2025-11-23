@@ -6,6 +6,7 @@
 1. Activate the appropriate environment using following command: `conda activate eotrh-analysis`
 
 **Note before starting the workflow**
+
 Make sure the respective script is executable (if not run following command before executing: `chmod +x [file_name].py`)
 
 ## 1 Sample Metadata
@@ -137,9 +138,47 @@ Outputs: (saved in project/outputs/04.2_vsearch)
 
 1. Navigate into the appropriate directory using following command: `cd project/scripts`
 2. Execute the script 04.3_ftable-fdata.py using following command: ./04.3_ftable-fdata.py
-    a. Download the generated .qzv files and open them in the browser (https://view.qiime2.org).
+    * Download the generated .qzv files and open them in the browser (https://view.qiime2.org).
         - Downloading files from website was not possible, therefore pdf files are saved in project/reports
     
+This script creates visual summaries of the feature tables and representative sequences from both DADA2 (ASVs) and vsearch (OTUs) outputs.
 
+What it does:
+
+Generates two types of visualizations for each approach:
+
+* Feature table summary - Shows how many sequences are associated with each sample and feature, including histograms of distributions and summary statistics (min/max/median reads per sample, feature frequencies, etc.)
+* Representative sequences tabulation - Provides a mapping of feature IDs to their actual sequences, with direct links to BLAST each sequence against the NCBI nucleotide database for identification
+
+Outputs:
+* dada2-asv-table-summary.qzv - DADA2 feature table statistics
+* dada2-asv-rep-seqs-summary.qzv - DADA2 representative sequences with BLAST links
+* vsearch-otu-table-summary.qzv - vsearch OTU table statistics
+* vsearch-otu-rep-seqs-summary.qzv - vsearch OTU sequences with BLAST links
+
+All visualizations are saved to outputs/04.3_ftable-fdata/ and can be viewed at https://view.qiime2.org.
+
+## 5 Filtering features from the feature table
+
+1. Navigate into the appropriate directory using following command: `cd project/scripts`
+2. Execute the script 05_filter-ftable.py using following command: `./05_filter-ftable.py`
+
+This script filters out spurious sequences that are likely sequencing errors or contaminants based on their occurrence across samples.
+What it does:
+Removes rare features (ASVs or OTUs) that appear in fewer than 2 samples from both the DADA2 and vsearch outputs. This is a two-step process:
+* Filter feature table - Removes features present in < 2 samples from the abundance table
+* Filter sequences - Removes the corresponding sequences to match the filtered table
+
+Filtering singletons (features in only one sample) reduces noise, speeds up downstream analyses, and removes potential sequencing artifacts that are unlikely to represent true biological diversity.
+
+Outputs: (saved to outputs/05_filter-ftable/):
+* dada2-asv-table-ms2.qza / dada2-asv-rep-seqs-ms2.qza - Filtered DADA2 artifacts
+* vsearch-otu-table-ms2.qza / vsearch-otu-rep-seqs-ms2.qza - Filtered vsearch artifacts
+* Corresponding .qzv visualization files for quality checking
+
+## 6 Checking for contamination 
+
+1. Navigate into the appropriate directory using following command: `cd project/scripts`
+2. Execute the script 06.1_check-cont-identify.py using following command: `06.1_check-cont-identify.py`
 
 
