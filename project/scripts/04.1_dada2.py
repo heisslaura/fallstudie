@@ -17,7 +17,7 @@ from qiime2.plugins import dada2
 # Define paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INPUT_DIR = os.path.join(BASE_DIR, 'outputs', '02_import')
-OUTPUT_DIR = os.path.join(BASE_DIR, 'outputs', '04_denoising')
+OUTPUT_DIR = os.path.join(BASE_DIR, 'outputs', '04_1_dada2')
 SEQUENCES_ARTIFACT = os.path.join(INPUT_DIR, 'paired-end-sequences.qza')
 
 # Create output directory
