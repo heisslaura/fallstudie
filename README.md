@@ -179,6 +179,22 @@ Outputs: (saved to outputs/05_filter-ftable/):
 ## 6 Checking for contamination 
 
 1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 06.1_check-cont-identify.py using following command: `06.1_check-cont-identify.py`
+2. Execute the script 06.1_check-cont-identify.py using following command: `./06.1_check-cont-identify.py`
+
+**Note**
+
+After running dada2 denoising (step 4.1), the negative control was filtered out because it contained only low quality reads and chimeric articts. As the scripts in code 6 either requires a) negative control (prevalence method) or b) DNA concentrations and neither of them were given, we were not able to perform the decontamination step. Anyways, the filtered-out negative sample indicates neglibile contamination in the sequencing process. 
+
+## 7 Generate a tree for phylogenetic diversity analyses
+
+1. Navigate into the appropriate directory using following command: `cd project/scripts`
+2. Execute the script 07_phylo-diversity.py using following command: `./07_phylo-diversity.py`
+
+### 7.1 Alpha and beta diversity analysis
+
+1. Navigate into the appropriate directory using following command: `cd project/scripts`
+2. Execute the script 07.1_a-b-div.py using following command: `./07.1_a-b-div.py.py`
+
+
 
 
