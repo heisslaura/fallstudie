@@ -190,10 +190,50 @@ After running dada2 denoising (step 4.1), the negative control was filtered out 
 1. Navigate into the appropriate directory using following command: `cd project/scripts`
 2. Execute the script 07_phylo-diversity.py using following command: `./07_phylo-diversity.py`
 
+The purpose of this script is to generate rooted phylogenetic trees required for phylogenetic diversity analyses (Faith's PD, UniFrac distances).
+
+**Input:**
+- ASV representative sequences: `04.1_dada2/rep-seqs.qza`
+- OTU representative sequences: `04.2_vsearch/rep-seqs-clustered-97.qza`
+
+**Method:** Uses QIIME2's `align-to-tree-mafft-fasttree` pipeline:
+1. Multiple sequence alignment (MAFFT)
+2. Masking highly variable positions
+3. Tree construction (FastTree)
+4. Midpoint rooting
+
+**Output:** `outputs/07_phylogeny/`
+- `dada2-rooted-tree.qza` - Rooted phylogenetic tree for ASVs
+- `vsearch-rooted-tree.qza` - Rooted phylogenetic tree for OTUs
+- Alignment and unrooted tree files for both
+
+
 ### 7.1 Alpha and beta diversity analysis
 
 1. Navigate into the appropriate directory using following command: `cd project/scripts`
 2. Execute the script 07.1_a-b-div.py using following command: `./07.1_a-b-div.py.py`
+
+The purpose of this script is to compute diversity metrics to compare microbial community composition within and between samples.
+
+**Input:**
+- ASV feature table: `04.1_dada2/table.qza`
+- OTU feature table: `04.2_vsearch/table-clustered-97.qza`
+- Rooted phylogenetic trees from Task 7
+- Sample metadata: `data/processed/sample-metadata.tsv`
+
+**Method:** Uses QIIME2's `core-metrics-phylogenetic` with rarefaction:
+- **Sampling depth:** 2839 (retains 22/23 samples, excludes NK negative control with 0 reads)
+- Computes 4 alpha diversity metrics (Shannon, Observed Features, Faith's PD, Evenness)
+- Computes 4 beta diversity metrics (Jaccard, Bray-Curtis, UniFrac weighted/unweighted)
+- Generates PCoA plots and Emperor visualizations
+
+**Output:** `outputs/07.1_diversity_asv/` and `outputs/07.1_diversity_otu/`
+- Rarefied feature table
+- Alpha diversity vectors (4 metrics)
+- Beta diversity distance matrices (4 metrics)
+- PCoA results (4 analyses)
+- Emperor visualizations (.qzv files for interactive 3D plotting)
+
 
 
 
