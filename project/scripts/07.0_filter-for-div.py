@@ -153,11 +153,6 @@ def main():
     print(f"\nGenerated files ({len(all_outputs)}):")
     for output in all_outputs:
         print(f"  - {os.path.basename(output)}")
-    print(f"\nNote: '_bio' indicates biological samples only (controls excluded)")
-    print("\nThese filtered datasets are ready for:")
-    print("  - Phylogenetic tree generation (Task 7.1)")
-    print("  - Alpha/beta diversity analyses (Task 7.2)")
-    print("\nView .qzv files at: https://view.qiime2.org")
     print("="*60)
 
 

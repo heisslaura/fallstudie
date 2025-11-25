@@ -1,248 +1,237 @@
-# Fallstudie
+# Fallstudie: 16S rRNA Microbiome Data Analysis using QIIME 2
+
+This repository contains the workflow and scripts for the 16S rRNA gene sequencing data analysis for the "Fallstudie" project. The analysis is structured into multiple, sequential steps, primarily utilizing the QIIME 2 bioinformatics platform.
 
 ## Setup 
 
-1. Install the environment file "environment.yml" using following command: `conda env create -f environment.yml`
-1. Activate the appropriate environment using following command: `conda activate eotrh-analysis`
+This project uses a Conda environment to manage all necessary software and dependencies.
 
-**Note before starting the workflow**
+1.  **Install Environment:** Navigate to the main project directory and create the environment using the provided specification file: `conda env create -f environment.yml`
+2.  **Activate Environment:** Activate the newly created environment before executing any analysis scripts: `conda activate eotrh-analysis`
 
-Make sure the respective script is executable (if not run following command before executing: `chmod +x [file_name].py`)
+**Note on script execution**
+
+All primary analysis scripts (`.py` files) are designed to be executable from the `project/scripts` directory. Before running any script, ensure it has executable permissions (if needed):`chmod +x [file_name].py`
+
+# Analysis Workflow
+
+The workflow includes both Amplicon Sequence Variant (ASV)-based (using DADA2) and Operational Taxonomic Unit (OTU)-based (using vsearch at 97% similarity) approaches. We aim to compare the results of both.
 
 ## 1 Sample Metadata
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 01_sample-metadata.py using following command: `./01_sample-metadata.py`
+This step prepares the sample metadata into a QIIME 2-compatible format and performs initial data review.
 
-This script will transform the Excel file into QIIME2-compatible format and anonymize potential "personal" information for this dataset. The transformed metadata will be stored in project/data/processed. Additionally, we create a QIIME2-compatible visualization file stored in project/outputs/01_metadata. This .qzv file can be evaluated in GoogleSheets with the Keemei plugin to check whether the metadata fulfills QIIME2 standards. The report of Keemei is saved in project/reports. 
+* Command: `./01_sample-metadata.py`
+* Input: project/data/raw/EOTRH-MetadatenProben-WS2025.xlsx
+* Output: 
+    - project/data/processed/sample-metadata.tsv
+    - project/outputs/01_metadata/metadata.qzv
+* Note: metadata.qzv can be evaluated in GoogleSheets with the Keemei plugin to check whether the metadata fulfills QIIME2 standards. The report of Keemei is saved in project/reports. 
 
 ## 2 Obtaining and importing data
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 02_obtaining-and-importing-data.py using following command: `./02_obtaining-and-importing-data.py`
+Create manifest file and import FASTQ reads into QIIME 2.
 
-This script will use the raw sequencing reads from project/data/raw and import them into QIIME2 format for analysis. It performs two main steps: 
-
-Step 1: Create manifest file. 
-The script reads sample metadata file to identify all sample IDs, then searches for corresponding paired-end FASTQ files in the raw data directory. It creates a manifest file that maps each sample ID to its fw and rv read file paths, which is saved in data/processed. 
-
-Step 2: Import Sequences. 
-Using the manifest file, the script imports all paired-end sequences into a singel QIIME2 artifact, which is the starting point for all downstream analysis. The generated file is saved in project/outputs/02_import. 
+* Command: `./02_obtaining-and-importing-data.py`
+* Input: 
+    - project/data/raw/20241209-raw_data/*.fastq.gz
+    - project/data/processed/sample-metadata.tsv
+* Output: 
+    - project/data/processed/manifest.tsv
+    - project/outputs/02_import/paired-end-sequences.qza
 
 ## 3 Demultiplexing sequences
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 03_demultiplexing-sequences.py using following command: `./03_demultiplexing-sequences.py`
-3. Download the generated file "demux-summary.qzv" from project/outputs/03_quality and open it in your browser (https://view.qiime2.org). 
-    a. Download of files was not possible, therefore pdf files from the website is saved in project/reports
+Generate quality plots (samples already demultiplexed)
 
-This script will use the imported sequences from project/outputs/02_import/paired-end-sequences.qza and create a quality assessment visualization to help determine optimal parameters for denoising.
-
-Since the sequences are already demultiplexed by the sequencing facility (each sample has its own FASTQ files), this script skips the demultiplexing step and focuses on quality assessment. It uses QIIME2's demux summarize function to randomly sample 10,000 sequences and generate interactive quality plots.
-
-The visualization shows:
-
-* Number of sequences per sample (sequencing depth)
-* Interactive quality score plots for both forward and reverse reads
-* Quality score distribution across all read positions
-* Per-sample sequence statistics
-
-The quality plots will be used to determine the trimming and truncation parameters for DADA2 denoising in Task 4 (specifically the --p-trunc-len-f and --p-trunc-len-r parameters). 
-
-The generated file is saved in project/outputs/03_quality and can be viewed at https://view.qiime2.org.
-
+* Command: `./03_demultiplexing-sequences.py`
+* Input: 
+    - project/outputs/02_import/paired-end-sequences.qza
+* Output: 
+   - project/outputs/03_quality/demux-summary.qzv
+* Note: demux-summary.qzv can be viewed at https://view.qiime2.org 
+    - used to determine the trimming and truncation parameters for DADA2 denoising in Task 4 (specifically the --p-trunc-len-f and --p-trunc-len-r parameters)
+    - Report saved in project/reports
 
 ## 4 Sequence quality control and feature table construction
 
-1. Review the interactive quality plot tab in the "demux-summary.qzv" file that was generated by qiime demux summarize in step 3. 
-    * Analyze the reports 
-        * Sequence Coverage
-            * all 23 samples imported successfully
-            * Range: 4012 to 79,184 sequences per sample
-            * Median: ~65,675 sequences per sample
-            * good coverage for analysis
-        * Sequence Length
-            * all sequences are 301 bp (both fw and rv)
-        * Quality Scores 
-            * Forward Reads
-                * Quality stays high (Q35-48) until position 270-280
-                * by position 280-300, quality drops to Q10-15
-            * Reverse Reads
-                * Quality stays high (Q35-38) until around position 230-240
-                * after position 250, quality drops even more drastic than fw
-2. Determine optimal cutoffs for next step (feature table construction)
-    * --p-trim-left m (trims off the first m bases of each sequence)
-        * FW: 0
-        * RV: 0 
-    * --p-trunc-len n (truncates each sequence at position n)
-        * FW: 270 
-        * RV: 240 
+### Choosing trim values
+
+Review of interactive quality plot (demux-summary.qzv)
+
+* Sequence Coverage
+    * all 23 samples imported successfully
+    * Range: 4012 to 79,184 sequences per sample
+    * Median: ~65,675 sequences per sample
+    * good coverage for analysis
+* Sequence Length
+    * all sequences are 301 bp (both fw and rv)
+* Quality Scores 
+    * Forward Reads
+        * Quality stays high (Q35-48) until position 270-280
+        * by position 280-300, quality drops to Q10-15
+    * Reverse Reads
+        * Quality stays high (Q35-38) until around position 230-240
+        * after position 250, quality drops even more drastic than fw
+
+Optimal cutoffs for feature table construction
+* --p-trim-left m (trims off the first m bases of each sequence)
+    * FW: 0
+    * RV: 0 
+* --p-trunc-len n (truncates each sequence at position n)
+    * FW: 270 
+    * RV: 240 
 
 ### 4.1 qiime dada2 
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 04.1_dada2.py using following command: `./04.1_dada2.py`
-    * This script may take very long (9+ hours in my case), if you would like to run it overnight, you can use following command instead: `nohup ./04.1_dada2.py > ~/dada2.log 2>&1`
+Generate ASVs using DADA2.
 
-This script uses the imported sequences from project/outputs/02_import/paired-end-sequences.qza and applies DADA2 denoising to create high-quality ASVs (Amplicon Sequence Variants).
+* Command: `./04.1_dada2.py`
+* Input: 
+    - project/outputs/02_import/paired-end-sequences.qza
+* Output: 
+    - project/outputs/04.1_dada2/table.qza
+    - project/outputs/04.1_dada2/rep-seqs.qza
+    - project/outputs/04.1_dada2/denoising-stats.qza
+* Note: This script may take very long (9+ hours in my case), if you would like to run it overnight, you can use following command instead: `nohup ./04.1_dada2.py > ~/dada2.log 2>&1`
 
-DADA2 Processing Steps:
+#### Generate visualization of denoising file
 
-* Quality filtering and trimming - Truncates forward reads at 270bp and reverse reads at 240bp (based on quality plots from Task 3)
-* Error rate learning - Learns sequencing error patterns from your data
-* Denoising - Corrects sequencing errors to identify true biological sequences
-* Paired-end merging - Merges forward and reverse reads into full amplicons
-* Chimera removal - Removes chimeric sequences formed during PCR
-
-Outputs: (saved in project/outputs/04.1_dada2)
-* table.qza - Feature table with ASV counts per sample 
-* rep-seqs.qza - Representative sequences for each ASV
-* denoising-stats.qza - Statistics showing how many reads passed each filtering step
-
-3. Execute the script 04.1_dada2-metadata.py using following command: `./04.1_dada2-metadata.py`
-    * Download the generated file "denoising-stats.qzv" from project/outputs/04_denoising and open it in your browser (https://view.qiime2.org). 
-        * Download of files was not possible, therefore pdf file from the website is saved in project/reports
-
-This script creates a visualization of the DADA2 denoising statistics to assess the quality control results.
-
-It takes the denoising-stats.qza artifact from DADA2 and converts it into an interactive visualization showing per-sample statistics including: input reads, filtered reads, denoised reads, merged reads, non-chimeric reads, and the percentage of reads retained through each step.
-
-Output: (saved in project/outputs/04.1_dada2)
-* denoising-stats.qzv - Visualization file viewable at https://view.qiime2.org
+* Command: `./04.1_dada2-metadata.py`
+* Input: 
+    - denoising-stats.qza
+* Output: 
+    - project/outputs/04.1_dada2/denoising-stats.qzv 
+* Note: Report saved in project/reports
 
 ### 4.2 qiime vsearch
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 04.2_vsearch.py.py using following command: `./04.2_vsearch.py`
+Cluster ASVs into OTUs at 97% similarity.
 
-This script takes the DADA2 outputs (table.qza and rep-seqs.qza) from project/outputs/04.1_dada2/ and clusters the 830 ASVs into OTUs (Operational Taxonomic Units) at 97% sequence similarity.
-
-What it does:
-Uses vsearch's cluster-features-de-novo method to group similar ASV sequences together based on 97% identity threshold - the traditional definition of bacterial species-level OTUs. Sequences are compared on the forward strand only (strand='plus') since DADA2 already merged and oriented the paired-end reads correctly.
-
-Clustering Process:
-* Loads the ASV feature table and representative sequences from DADA2
-* Compares all ASV sequences pairwise at 97% identity
-* Groups similar sequences into OTU clusters
-* Sums feature counts for ASVs that cluster together
-* Selects centroid sequences as OTU representatives
-
-Outputs: (saved in project/outputs/04.2_vsearch)
-* table-clustered-97.qza - Feature table with OTU counts per sample (830 OTUs)
-* rep-seqs-clustered-97.qza - Representative sequences for each OTU
-* table-clustered-97.qzv - Visualization of OTU table statistics
-* rep-seqs-clustered-97.qzv - Visualization of OTU sequences with BLAST links
-
+* Command: `./04.2_vsearch.py`
+* Input: 
+    - project/outputs/04.1_dada2/table.qza
+    - project/outputs/04.1_dada2/rep-seqs.qza
+* Output: 
+    - project/outputs/04.1_vsearch/table-clustered-97.qza
+    - project/outputs/04.1_vsearch/rep-seqs-clustered-97.qza
+    - project/outputs/04.1_vsearch/table-clustered-97.qzv
+    - project/outputs/04.1_vsearch/rep-seqs-clustered-97.qzv
 
 ### 4.3 FeatureTable and FeatureData summaries
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 04.3_ftable-fdata.py using following command: ./04.3_ftable-fdata.py
-    * Download the generated .qzv files and open them in the browser (https://view.qiime2.org).
-        - Downloading files from website was not possible, therefore pdf files are saved in project/reports
-    
-This script creates visual summaries of the feature tables and representative sequences from both DADA2 (ASVs) and vsearch (OTUs) outputs.
-
-What it does:
-
-Generates two types of visualizations for each approach:
-
-* Feature table summary - Shows how many sequences are associated with each sample and feature, including histograms of distributions and summary statistics (min/max/median reads per sample, feature frequencies, etc.)
-* Representative sequences tabulation - Provides a mapping of feature IDs to their actual sequences, with direct links to BLAST each sequence against the NCBI nucleotide database for identification
-
-Outputs:
-* dada2-asv-table-summary.qzv - DADA2 feature table statistics
-* dada2-asv-rep-seqs-summary.qzv - DADA2 representative sequences with BLAST links
-* vsearch-otu-table-summary.qzv - vsearch OTU table statistics
-* vsearch-otu-rep-seqs-summary.qzv - vsearch OTU sequences with BLAST links
-
-All visualizations are saved to outputs/04.3_ftable-fdata/ and can be viewed at https://view.qiime2.org.
+* Command: `./04.3_ftable-fdata.py`
+* Input: 
+    - project/outputs/04.1_dada2/table.qza
+    - project/outputs/04.1_dada2/rep-seqs.qza
+    - project/outputs/04.1_vsearch/table-clustered-97.qza
+    - project/outputs/04.1_vsearch/rep-seqs-clustered-97.qza
+* Output: 
+   - project/outputs/04.3_ftable-fdata/dada2-asv-table-summary.qzv
+   - project/outputs/04.3_ftable-fdata/dada2-asv-rep-seqs-summary.qzv
+   - project/outputs/04.3_ftable-fdata/vsearch-otu-table-summary.qzv
+   - project/outputs/04.3_ftable-fdata/vsearch-otu-rep-seqs-summary.qzv
+* Note: Reports saved in project/reports
 
 ## 5 Filtering features from the feature table
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 05_filter-ftable.py using following command: `./05_filter-ftable.py`
+Remove rare features (present in <2 samples)
 
-This script filters out spurious sequences that are likely sequencing errors or contaminants based on their occurrence across samples.
-What it does:
-Removes rare features (ASVs or OTUs) that appear in fewer than 2 samples from both the DADA2 and vsearch outputs. This is a two-step process:
-* Filter feature table - Removes features present in < 2 samples from the abundance table
-* Filter sequences - Removes the corresponding sequences to match the filtered table
-
-Filtering singletons (features in only one sample) reduces noise, speeds up downstream analyses, and removes potential sequencing artifacts that are unlikely to represent true biological diversity.
-
-Outputs: (saved to outputs/05_filter-ftable/):
-* dada2-asv-table-ms2.qza / dada2-asv-rep-seqs-ms2.qza - Filtered DADA2 artifacts
-* vsearch-otu-table-ms2.qza / vsearch-otu-rep-seqs-ms2.qza - Filtered vsearch artifacts
-* Corresponding .qzv visualization files for quality checking
+* Command: `./05_filter-ftable.py`
+* Input: (project/outputs/04.1_dada2/ & project/outputs/04.2_vsearch/)
+    - table.qza
+    - rep-seqs.qza
+    - table-clustered-97.qza
+    - rep-seqs-clustered-97.qza
+* Output: (project/outputs/05_filter-ftable/)
+    - dada2-asv-table-ms2.qza / 
+    - dada2-asv-rep-seqs-ms2.qza 
+    - vsearch-otu-table-ms2.qza 
+    - vsearch-otu-rep-seqs-ms2.qza 
+    - Corresponding .qzv visualization files for quality checking
+* Note: Reports saved in project/reports
 
 ## 6 Checking for contamination 
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 06.1_check-cont-identify.py using following command: `./06.1_check-cont-identify.py`
-
-**Note**
-
-After running dada2 denoising (step 4.1), the negative control was filtered out because it contained only low quality reads and chimeric articts. As the scripts in code 6 either requires a) negative control (prevalence method) or b) DNA concentrations and neither of them were given, we were not able to perform the decontamination step. Anyways, the filtered-out negative sample indicates neglibile contamination in the sequencing process. 
+* Command: `./06.1_check-cont-identify.py`
+* Input: (project/outputs/04.1_dada2/ & project/outputs/04.2_vsearch/ & project/data/processed)
+    - table.qza
+    - table-clustered-97.qza
+    - sample-metadata.tsv
+* Output: (project/outputs/06_check-cont/)
+    - dada2-asv-decontam-scores.qza
+    - vsearch-otu-decontam-scores.qza
+* Note: After running dada2 denoising (step 4.1), the negative control was filtered out because it contained only low quality reads and chimeric articts. As the scripts in code 6 either requires a) negative control (prevalence method) or b) DNA concentrations and neither of them were given, we were not able to perform the decontamination step. Anyways, the filtered-out negative sample indicates neglibile contamination in the sequencing process. 
 
 ## 7 Generate a tree for phylogenetic diversity analyses
 
 Before starting the generation of trees for phylogenetic diversity, the control samples need to be filtered. To do this, perform following steps: 
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 07.0_filter-for-div.py using following command: `./07.0_filter-for-div.py`
+* Command: `./07.0_filter-for-div.py`
+* Input: (project/outputs/05_filter-ftable/ & project/data/processed)
+    - dada2-asv-table-ms2.qza / 
+    - dada2-asv-rep-seqs-ms2.qza 
+    - vsearch-otu-table-ms2.qza 
+    - vsearch-otu-rep-seqs-ms2.qza 
+    - sample-metadata.tsv
+* Output: (project/outputs/07.0_filter-for-div/)
+    - asv-rep-seqs-bio.qza
+    - asv-table-bio.qza
+    - otu-rep-seqs-bio.qza
+    - otu-table-bio.qza
+    - corresponding .qzv files 
 
-**Output:** `outputs/07.0_filter-for-div/`
+Now, the phylogenetic trees can be created. 
 
-Now, you can generate the phylogenetic trees as follows: 
-
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 07_phylo-trees.py using following command: `./07_phylo-trees.py`
-
-The purpose of this script is to generate rooted phylogenetic trees required for phylogenetic diversity analyses (Faith's PD, UniFrac distances).
-
-**Input:**
-- ASV representative sequences: `07.0_filter-for-div/asv-rep-seqs-bio.qza`
-- OTU representative sequences: `07.0_filter-for-div/otu-rep-seqs-bio.qza`
-
-**Method:** Uses QIIME2's `align-to-tree-mafft-fasttree` pipeline:
-1. Multiple sequence alignment (MAFFT)
-2. Masking highly variable positions
-3. Tree construction (FastTree)
-4. Midpoint rooting
-
-**Output:** `outputs/07_phylo-trees/`
-- `asv-rooted-tree.qza` - Rooted phylogenetic tree for ASVs
-- `otu-rooted-tree.qza` - Rooted phylogenetic tree for OTUs
-- Alignment and unrooted tree files for both
-
+* Command: `./07_phylo-trees.py`
+* Input: (project/outputs/07.0_filter-for-div/)
+    - asv-rep-seqs-bio.qza
+    - otu-rep-seqs-bio.qza
+* Output: (project/outputs/07_phylo-trees/)
+    - asv-rooted-tree.qza
+    - otu-rooted-tree.qza
+    - Alignment and unrooted tree files for both
 
 ### 7.1 Alpha and beta diversity analysis
 
-1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 07.1_a-b-div.py using following command: `./07.1_a-b-div.py`
+Before starting this task, it is essential to choose a value for `--p-sampling-depth` which is the even sampling (i.e. refraction) depth. To do this, review of two files is necessary. 
+* asv-table-bio.qza
+* otu-table-bio.qza
+
+Choose a value that is as high as possible (so you retain more sequences per sample) while excluding as few samples as possible.
 
 The purpose of this script is to compute diversity metrics to compare microbial community composition within and between samples.
 
-**Input:**
-- ASV feature table: `04.1_dada2/table.qza`
-- OTU feature table: `04.2_vsearch/table-clustered-97.qza`
-- Rooted phylogenetic trees from Task 7
-- Sample metadata: `data/processed/sample-metadata.tsv`
+* Command: `./07.1_a-b-div.py`
+* Input: (project/outputs/07.0_filter-for-div/ & project/outputs/07_phylo-trees/ & project/data/processed)
+    - asv-table-bio.qza
+    - otu-table-bio.qza
+    - asv-rooted-tree.qza
+    - otu-rooted-tree.qza
+    - sample-metadata.tsv
+* Output: (project/outputs/07.1_a-b-div/)
+    - asv-core-metrics
+    - otu-core-metrics
 
-**Method:** Uses QIIME2's `core-metrics-phylogenetic` with rarefaction:
-- **Sampling depth:** 2700 (retains 20/21 samples)
-- Computes 4 alpha diversity metrics (Shannon, Observed Features, Faith's PD, Evenness)
-- Computes 4 beta diversity metrics (Jaccard, Bray-Curtis, UniFrac weighted/unweighted)
-- Generates PCoA plots and Emperor visualizations
+#### Test associations between categorical metadata columns and alpha diversity data 
 
-**Output:** `outputs/07.1_diversity_asv/` and `outputs/07.1_diversity_otu/`
-- Rarefied feature table
-- Alpha diversity vectors (4 metrics)
-- Beta diversity distance matrices (4 metrics)
-- PCoA results (4 analyses)
-- Emperor visualizations (.qzv files for interactive 3D plotting)
+* Command: `./07.1.1_a-sig.py`
+* Input: (project/outputs/07.1_a-b-div/asv-core-metrics & project/outputs/07.1_a-b-div/otu-core-metrics & project/data/processed)
+    - faith_pd_vector
+    - evenness_vector
+    - sample-metadata.tsv
+* Output: (project/outputs/07.1.1_a-sig/asv & project/outputs/07.1.1_a-sig/otu)
+    - faith-pd-group-significance.qzv
+    - evenness-group-significance.qzv
 
+#### Test associations between categorical metadata columns and beta diversity data 
+
+* Command: `./07.1.2_b-sig.py`
+* Input: (project/outputs/07.1_a-b-div/asv-core-metrics & project/outputs/07.1_a-b-div/otu-core-metrics & project/data/processed)
+    - unweighted_unifrac_distance_matrix
+    - sample-metadata.tsv
+* Output: (project/outputs/07.1.2_b-sig/asv & project/outputs/07.1.1_a-sig/otu)
+    - unweighted-unifrac-[metadata-column]- group-significance.qzv
 
 
 
