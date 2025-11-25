@@ -187,14 +187,23 @@ After running dada2 denoising (step 4.1), the negative control was filtered out 
 
 ## 7 Generate a tree for phylogenetic diversity analyses
 
+Before starting the generation of trees for phylogenetic diversity, the control samples need to be filtered. To do this, perform following steps: 
+
 1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 07_phylo-diversity.py using following command: `./07_phylo-diversity.py`
+2. Execute the script 07.0_filter-for-div.py using following command: `./07.0_filter-for-div.py`
+
+**Output:** `outputs/07.0_filter-for-div/`
+
+Now, you can generate the phylogenetic trees as follows: 
+
+1. Navigate into the appropriate directory using following command: `cd project/scripts`
+2. Execute the script 07_phylo-trees.py using following command: `./07_phylo-trees.py`
 
 The purpose of this script is to generate rooted phylogenetic trees required for phylogenetic diversity analyses (Faith's PD, UniFrac distances).
 
 **Input:**
-- ASV representative sequences: `04.1_dada2/rep-seqs.qza`
-- OTU representative sequences: `04.2_vsearch/rep-seqs-clustered-97.qza`
+- ASV representative sequences: `07.0_filter-for-div/asv-rep-seqs-bio.qza`
+- OTU representative sequences: `07.0_filter-for-div/otu-rep-seqs-bio.qza`
 
 **Method:** Uses QIIME2's `align-to-tree-mafft-fasttree` pipeline:
 1. Multiple sequence alignment (MAFFT)
@@ -202,16 +211,16 @@ The purpose of this script is to generate rooted phylogenetic trees required for
 3. Tree construction (FastTree)
 4. Midpoint rooting
 
-**Output:** `outputs/07_phylogeny/`
-- `dada2-rooted-tree.qza` - Rooted phylogenetic tree for ASVs
-- `vsearch-rooted-tree.qza` - Rooted phylogenetic tree for OTUs
+**Output:** `outputs/07_phylo-trees/`
+- `asv-rooted-tree.qza` - Rooted phylogenetic tree for ASVs
+- `otu-rooted-tree.qza` - Rooted phylogenetic tree for OTUs
 - Alignment and unrooted tree files for both
 
 
 ### 7.1 Alpha and beta diversity analysis
 
 1. Navigate into the appropriate directory using following command: `cd project/scripts`
-2. Execute the script 07.1_a-b-div.py using following command: `./07.1_a-b-div.py.py`
+2. Execute the script 07.1_a-b-div.py using following command: `./07.1_a-b-div.py`
 
 The purpose of this script is to compute diversity metrics to compare microbial community composition within and between samples.
 
@@ -222,7 +231,7 @@ The purpose of this script is to compute diversity metrics to compare microbial 
 - Sample metadata: `data/processed/sample-metadata.tsv`
 
 **Method:** Uses QIIME2's `core-metrics-phylogenetic` with rarefaction:
-- **Sampling depth:** 2839 (retains 22/23 samples, excludes NK negative control with 0 reads)
+- **Sampling depth:** 2700 (retains 20/21 samples)
 - Computes 4 alpha diversity metrics (Shannon, Observed Features, Faith's PD, Evenness)
 - Computes 4 beta diversity metrics (Jaccard, Bray-Curtis, UniFrac weighted/unweighted)
 - Generates PCoA plots and Emperor visualizations
@@ -233,6 +242,8 @@ The purpose of this script is to compute diversity metrics to compare microbial 
 - Beta diversity distance matrices (4 metrics)
 - PCoA results (4 analyses)
 - Emperor visualizations (.qzv files for interactive 3D plotting)
+
+
 
 
 
