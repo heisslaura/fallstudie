@@ -232,6 +232,32 @@ The purpose of this script is to compute diversity metrics to compare microbial 
     - sample-metadata.tsv
 * Output: (project/outputs/07.1.2_b-sig/asv & project/outputs/07.1.1_a-sig/otu)
     - unweighted-unifrac-[metadata-column]- group-significance.qzv
+ 
+## 8 Alpha rarefaction plotting
+To explore alpha diversity as a function of sampling depth you can use the qiime diversity alpha-rarefaction visualizer. This helps to determine if the richness of the samples has been fully observed or sequenced.
+The bottom plot in the resulting visualization is important when grouping samples by metadata. It helps to ensure that the data presented in the top plot is reliable.
+
+Alpha rarefaction analysis evaluates how alpha diversity changes with increasing sequencing depth. The `qiime diversity alpha-rarefaction` command repeatedly rarefies the feature table across a range of depths (from 1 or `--p-min-depth` to `--p-max-depth`). At each depth, multiple rarefied tables (`--p-iterations`, default: 10) are generated, alpha diversity metrics are computed, and the average values for each sample are plotted. If metadata is provided, samples can be grouped in the visualization.
+
+### Output visualization
+The resulting `.qzv` file contains two plots:
+
+1. **Alpha rarefaction curve (top plot)**  
+   Shows whether sample richness has been fully captured.  
+   - Curves that **level off** indicate sufficient sequencing effort.  
+   - Curves that **do not level off** may indicate insufficient sequencing depth or sequencing error inflating diversity.
+
+2. **Sample retention plot (bottom plot)**  
+   Shows how many samples remain at each rarefaction depth in each metadata group.  
+   Samples with fewer total reads than a given depth drop out, making diversity averages unreliable at higher depths if many samples are lost. This plot is essential when interpreting group-level rarefaction curves.
+
+### Choosing `--p-max-depth`
+Select a maximum depth based on the “frequency per sample” values in `table.qza`.  
+A value near the **median sample frequency** usually works well. Increase the value if curves do not level off, or decrease it if too many samples are lost at higher depths.
+
+### Purpose
+This analysis helps evaluate whether sequencing depth is sufficient and guides the choice of an appropriate rarefaction depth for downstream alpha and beta diversity calculations.
+
 
 
 
