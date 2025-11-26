@@ -288,3 +288,116 @@ If many samples drop out at high depths, group averages at those depths may be u
 ### Purpose  
 This step ensures that sequencing depth is adequate and helps guide the choice of an
 appropriate rarefaction depth for alpha and beta diversity analyses.
+
+
+## 9. Taxonomic Analysis (Greengenes2)
+
+Taxonomic analysis identifies who is present in the microbial community by assigning taxonomy to ASVs and OTUs.
+For this project we use Greengenes2 (2022.10) — a modern, phylogenetically consistent taxonomy and reference database.
+
+This workflow consists of:
+- Installing and verifying Greengenes2 + classifier (09.1)
+- Downloading the rooted Greengenes2 taxonomy tree (09.2)
+- Running taxonomy assignment + barplots (09)
+
+**Background**
+**Greengenes2 integrates:**
+- Whole-genome phylogeny from Web of Life
+- Full-length 16S rRNA from Living Tree Project
+- 16S operons extracted via uDance
+- Placement of millions of V4 fragments using DEPP
+- Taxonomy derived from GTDB + LTP and decorated using tax2tree
+
+**Greengenes2 provides:**
+- High-quality, phylogenetically coherent taxonomy
+- Extracted V4 sequences (515F/806R)
+- Pre-trained Naive Bayes classifiers
+
+**Multiple naming schemes (ASV, MD5, ID)**
+Important:
+
+For standard QIIME2 16S V4 workflows, Greengenes2 should be used with:
+feature-classifier classify-sklearn
+(NOT greengenes2 taxonomy-from-features)
+because only sequences already in the GG2 tree can be classified via taxonomy-from-features.
+
+**9.1 Greengenes2 Setup**
+
+Run the setup script:
+`./09.1_greengenes2-setup.py`
+
+This script:
+
+Verifies that the q2-greengenes2 plugin is installed
+Checks or downloads the correct Greengenes2 2022.10 V4 NB classifier, compatible with scikit-learn 1.4.2:
+data/processed/gg2-2022.10-backbone-v4-nb.qza
+
+**9.2 Download Greengenes2 Taxonomy Tree**
+
+Run:
+`./09.2_greengenes2-download-tree.py`
+
+This script downloads the official ASV-keyed Greengenes2 taxonomy tree, type Phylogeny[Rooted]:
+data/processed/gg2-taxonomy-asv-tree.qza
+
+**Sanity check:**
+`qiime tools peek data/processed/gg2-taxonomy-asv-tree.qza`
+
+# Expected: Type: Phylogeny[Rooted]
+This tree is optional for classification, but useful for phylogenetic analysis and feature filtering.
+9.3 Taxonomic Classification (ASV + OTU)
+
+Run:
+`./09_taxonomic-analysis.py`
+
+This script performs:
+
+1. ASV taxonomy assignment
+Using the Greengenes2 2022.10 V4 NB classifier with:
+`qiime feature-classifier classify-sklearn`
+
+2. OTU taxonomy assignment
+Using the same classifier for vsearch OTUs.
+
+3. Generation of taxonomy tables (.qza) and summaries (.qzv)
+4. Taxa barplots (taxa barplot)
+Interactive stacked bar charts grouped by sample metadata.
+
+**Output Files**
+All results are stored in:
+`project/outputs/09_taxonomy/`
+
+You will find:
+`asv-taxonomy.qza`
+`asv-taxonomy.qzv`
+`asv-taxa-bar-plots.qzv`
+
+`otu-taxonomy.qza`
+`otu-taxonomy.qzv`
+`otu-taxa-bar-plots.qzv`
+Visualization is available at:
+
+https://view.qiime2.org/
+
+
+
+
+------------
+# NOTES DELETE
+## Taxonomy
+
+run 09.1
+
+
+cd ~/fallstudie/project
+
+mkdir -p data/processed
+
+# Download the taxonomy tree (Phylogeny[Rooted]) keyed by ASV
+wget http://ftp.microbio.me/greengenes_release/2022.10/2022.10.taxonomy.asv.nwk.qza \
+  -O data/processed/gg2-taxonomy-asv-tree.qza (09.2)
+
+# Sanity check: 
+qiime tools peek data/processed/gg2-taxonomy-asv-tree.qza (09.2)
+  run 09
+
