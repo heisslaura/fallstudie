@@ -232,7 +232,7 @@ The purpose of this script is to compute diversity metrics to compare microbial 
     - project/outputs/07.1_a-b-div/otu-core-metrics/faith_pd_vector
     - project/outputs/07.1_a-b-div/otu-core-metrics/evenness_vector
     - project/data/processed/sample-metadata.tsv
-* Output: ( & )
+* Output: 
     - project/outputs/07.1.1_a-sig/asv/faith-pd-group-significance.qzv
     - project/outputs/07.1.1_a-sig/asv/ evenness-group-significance.qzv
     - project/outputs/07.1.1_a-sig/otu/faith-pd-group-significance.qzv
@@ -251,8 +251,7 @@ The purpose of this script is to compute diversity metrics to compare microbial 
  
 ## 8 Alpha rarefaction plotting
 
-This step explores **alpha diversity as a function of sequencing depth** using the  
-`qiime diversity alpha-rarefaction` visualizer. The goal is to assess whether sample
+This step explores **alpha diversity as a function of sequencing depth** using the `qiime diversity alpha-rarefaction` visualizer. The goal is to assess whether sample
 richness has been fully captured and to determine a suitable rarefaction depth for
 downstream analyses.
 
@@ -293,7 +292,6 @@ Shows how alpha diversity changes with increasing sampling depth.
 Shows how many samples remain at each depth.  
 If many samples drop out at high depths, group averages at those depths may be unreliable.
 
-### Purpose  
 This step ensures that sequencing depth is adequate and helps guide the choice of an
 appropriate rarefaction depth for alpha and beta diversity analyses.
 
@@ -331,6 +329,7 @@ because only sequences already in the GG2 tree can be classified via taxonomy-fr
 **9.1 Greengenes2 Setup**
 
 Verifies that the q2-greengenes2 plugin is installed
+
 Checks or downloads the correct Greengenes2 2022.10 V4 NB classifier, compatible with scikit-learn 1.4.2:
 data/processed/gg2-2022.10-backbone-v4-nb.qza
 
@@ -412,4 +411,4 @@ This analysis was conducted as part of the Fallstudie-ILV course at the Universi
 
 # Contributors
 * Isabella Pauser | 116914@fhwn.ac.at | 
-* Laura Heiß | 211567@fhwn.ac.at | [LinkedIn](www.linkedin.com/in/laura-heiß-863077258)
+* Laura Heiß | 211567@fhwn.ac.at | [LinkedIn](https://www.linkedin.com/in/laura-heiß-863077258)
