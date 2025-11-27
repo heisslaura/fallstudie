@@ -15,9 +15,11 @@ This project uses a Conda environment to manage all necessary software and depen
 1.  **Install Environment:** Navigate to the main project directory and create the environment using the provided specification file: `conda env create -f environment.yml`
 2.  **Activate Environment:** Activate the newly created environment before executing any analysis scripts: `conda activate eotrh-analysis`
 
-**Note on script execution**
+**Note on script execution and visualization**
 
 All primary analysis scripts (`.py` files) are designed to be executable from the `project/scripts` directory. Before running any script, ensure it has executable permissions (if needed):`chmod +x [file_name].py`
+
+All .qzv files can be viewed at [QIIME2view](https://view.qiime2.org)
 
 # Analysis Workflow
 
@@ -55,7 +57,7 @@ Generate quality plots (samples already demultiplexed)
     - project/outputs/02_import/paired-end-sequences.qza
 * Output: 
    - project/outputs/03_quality/demux-summary.qzv
-* Note: demux-summary.qzv can be viewed at https://view.qiime2.org 
+* Note:
     - used to determine the trimming and truncation parameters for DADA2 denoising in Task 4 (specifically the --p-trunc-len-f and --p-trunc-len-r parameters)
     - Report saved in project/reports
 
@@ -283,7 +285,6 @@ diversity metrics are computed, and the average values are plotted.
 
 **Top plot – Alpha rarefaction curve**  
 Shows how alpha diversity changes with increasing sampling depth.
-*  Note: `asv-alpha-rarefaction.qzv`and `otu-alpha-rarefaction.qzv` can be viewed at https://view.qiime2.org
 
 - Curves that *level off* → sequencing depth likely sufficient.  
 - Curves that *do not level off* → possible undersampling or sequencing noise.
@@ -295,7 +296,6 @@ If many samples drop out at high depths, group averages at those depths may be u
 ### Purpose  
 This step ensures that sequencing depth is adequate and helps guide the choice of an
 appropriate rarefaction depth for alpha and beta diversity analyses.
-
 
 ## 9 Taxonomic Analysis (Greengenes2)
 
