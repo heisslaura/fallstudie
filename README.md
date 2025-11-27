@@ -290,7 +290,7 @@ This step ensures that sequencing depth is adequate and helps guide the choice o
 appropriate rarefaction depth for alpha and beta diversity analyses.
 
 
-## 9. Taxonomic Analysis (Greengenes2)
+## 9 Taxonomic Analysis (Greengenes2)
 
 Taxonomic analysis identifies who is present in the microbial community by assigning taxonomy to ASVs and OTUs.
 For this project we use Greengenes2 (2022.10) — a modern, phylogenetically consistent taxonomy and reference database.
@@ -382,7 +382,7 @@ Visualization is available at:
 https://view.qiime2.org/
 
 
-## Differential Abundance Testing (ANCOM-BC)
+## 10 Differential Abundance Testing (ANCOM-BC)
 
 This step identifies features (ASVs and OTUs) that differ significantly in abundance between sample groups.
 
