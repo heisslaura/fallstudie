@@ -2,6 +2,12 @@
 
 This repository contains the workflow and scripts for the 16S rRNA gene sequencing data analysis for the "Fallstudie" project. The analysis is structured into multiple, sequential steps, primarily utilizing the QIIME 2 bioinformatics platform.
 
+## Data availability
+
+The raw sequencing data is available at NCBI Sequence Read Archive (SRA) under BioProject accession [PRJNA1370082](https://www.ncbi.nlm.nih.gov/sra/PRJNA1370082). 
+
+All sequencing reads and metadata are also available in this GitHub repository (project/data/raw).
+
 ## Setup 
 
 This project uses a Conda environment to manage all necessary software and dependencies.
@@ -119,6 +125,8 @@ Cluster ASVs into OTUs at 97% similarity.
     - project/outputs/04.1_vsearch/rep-seqs-clustered-97.qzv
 
 ### 4.3 FeatureTable and FeatureData summaries
+
+Create visual summaries (feature counts, sequence lengths, BLAST links) for both ASV and OTU datasets. 
 
 * Command: `./04.3_ftable-fdata.py`
 * Input: 
