@@ -146,11 +146,11 @@ Create visual summaries (feature counts, sequence lengths, BLAST links) for both
 Remove rare features (present in <2 samples)
 
 * Command: `./05_filter-ftable.py`
-* Input: (project/outputs/04.1_dada2/ & project/outputs/04.2_vsearch/)
-    - table.qza
-    - rep-seqs.qza
-    - table-clustered-97.qza
-    - rep-seqs-clustered-97.qza
+* Input: 
+    - project/outputs/04.1_dada2/table.qza
+    - project/outputs/04.1_dada2/rep-seqs.qza
+    - project/outputs/04.2_vsearch/table-clustered-97.qza
+    - project/outputs/04.2_vsearch/rep-seqs-clustered-97.qza
 * Output: (project/outputs/05_filter-ftable/)
     - dada2-asv-table-ms2.qza / 
     - dada2-asv-rep-seqs-ms2.qza 
@@ -162,10 +162,10 @@ Remove rare features (present in <2 samples)
 ## 6 Checking for contamination 
 
 * Command: `./06.1_check-cont-identify.py`
-* Input: (project/outputs/04.1_dada2/ & project/outputs/04.2_vsearch/ & project/data/processed)
-    - table.qza
-    - table-clustered-97.qza
-    - sample-metadata.tsv
+* Input: 
+    - project/outputs/04.1_dada2/table.qza
+    - project/outputs/04.2_vsearch/table-clustered-97.qza
+    - project/data/processedsample-metadata.tsv
 * Output: (project/outputs/06_check-cont/)
     - dada2-asv-decontam-scores.qza
     - vsearch-otu-decontam-scores.qza
@@ -176,12 +176,12 @@ Remove rare features (present in <2 samples)
 Before starting the generation of trees for phylogenetic diversity, the control samples need to be filtered. To do this, perform following steps: 
 
 * Command: `./07.0_filter-for-div.py`
-* Input: (project/outputs/05_filter-ftable/ & project/data/processed)
-    - dada2-asv-table-ms2.qza / 
-    - dada2-asv-rep-seqs-ms2.qza 
-    - vsearch-otu-table-ms2.qza 
-    - vsearch-otu-rep-seqs-ms2.qza 
-    - sample-metadata.tsv
+* Input: 
+    - /dada2-asv-table-ms2.qza / 
+    - dproject/outputs/05_filter-ftable/ada2-asv-rep-seqs-ms2.qza 
+    - project/outputs/05_filter-ftablevsearch-otu-table-ms2.qza 
+    - project/outputs/05_filter-ftablevsearch-otu-rep-seqs-ms2.qza 
+    - project/data/processedsample-metadata.tsv
 * Output: (project/outputs/07.0_filter-for-div/)
     - asv-rep-seqs-bio.qza
     - asv-table-bio.qza
@@ -211,12 +211,12 @@ Choose a value that is as high as possible (so you retain more sequences per sam
 The purpose of this script is to compute diversity metrics to compare microbial community composition within and between samples.
 
 * Command: `./07.1_a-b-div.py`
-* Input: (project/outputs/07.0_filter-for-div/ & project/outputs/07_phylo-trees/ & project/data/processed)
-    - asv-table-bio.qza
-    - otu-table-bio.qza
-    - asv-rooted-tree.qza
-    - otu-rooted-tree.qza
-    - sample-metadata.tsv
+* Input: 
+    - project/outputs/07.0_filter-for-div/asv-table-bio.qza
+    - project/outputs/07.0_filter-for-div/otu-table-bio.qza
+    - project/outputs/07_phylo-treesasv-rooted-tree.qza
+    - project/outputs/07_phylo-treesotu-rooted-tree.qza
+    - project/data/processed/sample-metadata.tsv
 * Output: (project/outputs/07.1_a-b-div/)
     - asv-core-metrics
     - otu-core-metrics
@@ -224,22 +224,28 @@ The purpose of this script is to compute diversity metrics to compare microbial 
 #### Test associations between categorical metadata columns and alpha diversity data 
 
 * Command: `./07.1.1_a-sig.py`
-* Input: (project/outputs/07.1_a-b-div/asv-core-metrics & project/outputs/07.1_a-b-div/otu-core-metrics & project/data/processed)
-    - faith_pd_vector
-    - evenness_vector
-    - sample-metadata.tsv
-* Output: (project/outputs/07.1.1_a-sig/asv & project/outputs/07.1.1_a-sig/otu)
-    - faith-pd-group-significance.qzv
-    - evenness-group-significance.qzv
+* Input: 
+    - project/outputs/07.1_a-b-div/asv-core-metricsfaith_pd_vector
+    - project/outputs/07.1_a-b-div/asv-core-metricsevenness_vector
+    - project/outputs/07.1_a-b-div/otu-core-metrics/faith_pd_vector
+    - project/outputs/07.1_a-b-div/otu-core-metrics/evenness_vector
+    - project/data/processed/sample-metadata.tsv
+* Output: ( & )
+    - project/outputs/07.1.1_a-sig/asv/faith-pd-group-significance.qzv
+    - project/outputs/07.1.1_a-sig/asv/ evenness-group-significance.qzv
+    - project/outputs/07.1.1_a-sig/otu/faith-pd-group-significance.qzv
+    - project/outputs/07.1.1_a-sig/otu/evenness-group-significance.qzv
 
 #### Test associations between categorical metadata columns and beta diversity data 
 
 * Command: `./07.1.2_b-sig.py`
-* Input: (project/outputs/07.1_a-b-div/asv-core-metrics & project/outputs/07.1_a-b-div/otu-core-metrics & project/data/processed)
-    - unweighted_unifrac_distance_matrix
-    - sample-metadata.tsv
-* Output: (project/outputs/07.1.2_b-sig/asv & project/outputs/07.1.1_a-sig/otu)
-    - unweighted-unifrac-[metadata-column]- group-significance.qzv
+* Input:
+    - project/outputs/07.1_a-b-div/asv-core-metrics/unweighted_unifrac_distance_matrix
+    - project/outputs/07.1_a-b-div/otu-core-metrics/ unweighted_unifrac_distance_matrix
+    - project/data/processed/sample-metadata.tsv
+* Output:
+    - project/outputs/07.1.2_b-sig/asv/unweighted-unifrac-[metadata-column]- group-significance.qzv
+    - project/outputs/07.1.1_a-sig/otu/unweighted-unifrac-[metadata-column]- group-significance.qzv
  
 ## 8 Alpha rarefaction plotting
 
@@ -263,22 +269,15 @@ depths. At each depth, multiple rarefied tables are generated (`--p-iterations`,
 diversity metrics are computed, and the average values are plotted.
 
 * Command: `./08_alpha-rarefaction.py`
-
-
-### Input  
-(from `project/outputs/07.0_filter-for-div/`, `project/outputs/07_phylo-trees/`, and `project/data/processed/`)
-
-- asv-table-bio.qza  
-- otu-table-bio.qza 
-- asv-rooted-tree.qza  
-- otu-rooted-tree.qza  
-- sample-metadata.tsv
-
-### Output  
-(saved in `project/outputs/08_alpha-rarefaction/`)
-
-- asv-alpha-rarefaction.qzv  
-- otu-alpha-rarefaction.qzv
+* Input:
+    - project/outputs/07.0_filter-for-div/asv-table-bio.qza  
+    - project/outputs/07.0_filter-for-div/otu-table-bio.qza 
+    - project/outputs/07_phylo-trees/asv-rooted-tree.qza  
+    - project/outputs/07_phylo-trees/otu-rooted-tree.qza  
+    - project/data/processed/sample-metadata.tsv
+* Output: (project/outputs/08_alpha-rarefaction/)
+    - asv-alpha-rarefaction.qzv  
+    - otu-alpha-rarefaction.qzv
 
 ### Interpretation of the visualization
 
@@ -331,72 +330,53 @@ because only sequences already in the GG2 tree can be classified via taxonomy-fr
 
 **9.1 Greengenes2 Setup**
 
-Run the setup script:
-`./09.1_greengenes2-setup.py`
-
-This script:
-
 Verifies that the q2-greengenes2 plugin is installed
 Checks or downloads the correct Greengenes2 2022.10 V4 NB classifier, compatible with scikit-learn 1.4.2:
 data/processed/gg2-2022.10-backbone-v4-nb.qza
 
-**9.2 Download Greengenes2 Taxonomy Tree**
+* Command: `./09.1_greengenes2-setup.py`
 
-Run:
-`./09.2_greengenes2-download-tree.py`
+**9.2 Download Greengenes2 Taxonomy Tree**
 
 This script downloads the official ASV-keyed Greengenes2 taxonomy tree, type Phylogeny[Rooted]:
 data/processed/gg2-taxonomy-asv-tree.qza
+
+* Command: `./09.2_greengenes2-download-tree.py`
 
 **Sanity check:**
 `qiime tools peek data/processed/gg2-taxonomy-asv-tree.qza`
 
 **Expected: Type: Phylogeny[Rooted]**
+
 This tree is optional for classification, but useful for phylogenetic analysis and feature filtering.
 
-***9.3 Taxonomic Classification (ASV + OTU)***
-
-Run:
-`./09_taxonomic-analysis.py`
+**9.3 Taxonomic Classification (ASV + OTU)**
 
 This script performs:
 
 1. ASV taxonomy assignment
 Using the Greengenes2 2022.10 V4 NB classifier with:
 `qiime feature-classifier classify-sklearn`
-
 2. OTU taxonomy assignment
 Using the same classifier for vsearch OTUs.
-
 3. Generation of taxonomy tables (.qza) and summaries (.qzv)
 4. Taxa barplots (taxa barplot)
 Interactive stacked bar charts grouped by sample metadata.
 
-**Output Files**
-All results are stored in:
-`project/outputs/09_taxonomy/`
-
-You will find:
-- asv-taxonomy.qza
-- asv-taxonomy.qzv
-- asv-taxa-bar-plots.qzv`
-
-- otu-taxonomy.qza
-- otu-taxonomy.qzv
-- otu-taxa-bar-plots.qzv
-
-Visualization is available at:
-
-https://view.qiime2.org/
-
+* Command: `./09_taxonomic-analysis.py`
+* Output: (project/outputs/09_taxonomy/)
+    - asv-taxonomy.qza
+    - asv-taxonomy.qzv
+    - asv-taxa-bar-plots.qzv`
+    - otu-taxonomy.qza
+    - otu-taxonomy.qzv
+    - otu-taxa-bar-plots.qzv
 
 ## 10 Differential Abundance Testing (ANCOM-BC)
 
 This step identifies features (ASVs and OTUs) that differ significantly in abundance between sample groups.
 
 We use ANCOM-BC, implemented in the QIIME 2 plugin q2-composition, which performs compositionally-aware differential abundance analysis with bias correction.
-
-Script: `scripts/10_ancombc.py`
 
 This script runs ANCOM-BC on both ASV and OTU feature tables using a selected metadata column (e.g. subject).
 
@@ -406,40 +386,20 @@ It performs:
 - ANCOM-BC at genus level
 - Barplot generation of significant differential features
 
-*Input*
-
-(from project/outputs/07.0_filter-for-div/, project/outputs/09_taxonomy/, and project/data/processed/)
-
-- asv-table-bio.qza
-- otu-table-bio.qza
-- asv-taxonomy.qza
-- otu-taxonomy.qza
-- sample-metadata.tsv
-
-*Output*
-
-(saved in project/outputs/10_ancombc/)
-
-- asv-ancombc.qza
-- asv-ancombc-barplot.qzv
-- asv-l6-table.qza
-- asv-l6-ancombc.qza
-- asv-l6-barplot.qzv
-
-(Equivalent files for OTU analysis)
-
-
-*Run the script:*
-
-`cd project/scripts`
-`./10_ancombc.py`
-
-The script will:
-
-- Validate input files
-- Run ANCOM-BC
-- Collapse by taxonomy level
-- Produce summary barplots for differentially abundant taxa
+* Command: `cd project/scripts/./10_ancombc.py`
+* Input: 
+    - project/outputs/07.0_filter-for-div/asv-table-bio.qza
+    - project/outputs/07.0_filter-for-div/otu-table-bio.qza
+    - project/outputs/09_taxonomy/asv-taxonomy.qza
+    - project/outputs/09_taxonomy/otu-taxonomy.qza
+    - project/data/processed/sample-metadata.tsv
+* Output: (saved in project/outputs/10_ancombc/)
+    - asv-ancombc.qza
+    - asv-ancombc-barplot.qzv
+    - asv-l6-table.qza
+    - asv-l6-ancombc.qza
+    - asv-l6-barplot.qzv
+    - equivalent files for otu analysis
 
 **Notes**
 
@@ -447,11 +407,9 @@ The script will:
 - If the script reports missing sample IDs, check whether your metadata uses human-readable names but the table uses hashed DADA2 sample IDs.
 - If needed, you can ask for an automated metadata ID-fixing helper script — I can generate it for you (10_fix-metadata.py), but it is not part of your current workflow.
 
-
 # Acknowledgements
-This analysis was conducted as part of the Fallstudie-ILV course at the University of Applied Sciences Wiener Neustadt. The workflow was primarily based on the [QIIME 2 Moving Pictures Tutorial](https://amplicon-docs.qiime2.org/en/latest/tutorials/moving-pictures.html) and the [QIIME 2 Amplicon Documentation](https://amplicon-docs.qiime2.org/en/latest/). Additional guidance was obtained from the [DADA2 Tutorial](https://benjjneb.github.io/dada2/tutorial.html) for denoising parameters and the [Q2 Decontam Tutorial](https://jordenrabasco.github.io/Q2_Decontam_Tutorial.html) for contamination analysis. We acknowledge the QIIME 2 development team (Bolyen et al., 2019, Nature Biotechnology) for providing this comprehensive microbiome analysis platform.
+This analysis was conducted as part of the Fallstudie-ILV course at the University of Applied Sciences Wiener Neustadt. The workflow was primarily based on the [QIIME 2 Moving Pictures Tutorial](https://amplicon-docs.qiime2.org/en/latest/tutorials/moving-pictures.html) and the [QIIME 2 Amplicon Documentation](https://amplicon-docs.qiime2.org/en/latest/). Additional guidance was obtained from the [DADA2 Tutorial](https://benjjneb.github.io/dada2/tutorial.html) for denoising parameters and the [Q2 Decontam Tutorial](https://jordenrabasco.github.io/Q2_Decontam_Tutorial.html) for contamination analysis. We acknowledge the QIIME 2 development team for providing this comprehensive microbiome analysis platform.
 
 # Contributors
-* Laura Heiß | 211567@fhwn.ac.at | [LinkedIn](www.linkedin.com/in/
-laura-heiß-863077258)
 * Isabella Pauser | 116914@fhwn.ac.at | 
+* Laura Heiß | 211567@fhwn.ac.at | [LinkedIn](www.linkedin.com/in/laura-heiß-863077258)
