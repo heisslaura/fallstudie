@@ -446,3 +446,12 @@ The script will:
 - ANCOM-BC requires that sample IDs in metadata match sample IDs in the feature tables.
 - If the script reports missing sample IDs, check whether your metadata uses human-readable names but the table uses hashed DADA2 sample IDs.
 - If needed, you can ask for an automated metadata ID-fixing helper script — I can generate it for you (10_fix-metadata.py), but it is not part of your current workflow.
+
+
+# Acknowledgements
+This analysis was conducted as part of the Fallstudie-ILV course at the University of Applied Sciences Wiener Neustadt. The workflow was primarily based on the [QIIME 2 Moving Pictures Tutorial](https://amplicon-docs.qiime2.org/en/latest/tutorials/moving-pictures.html) and the [QIIME 2 Amplicon Documentation](https://amplicon-docs.qiime2.org/en/latest/). Additional guidance was obtained from the [DADA2 Tutorial](https://benjjneb.github.io/dada2/tutorial.html) for denoising parameters and the [Q2 Decontam Tutorial](https://jordenrabasco.github.io/Q2_Decontam_Tutorial.html) for contamination analysis. We acknowledge the QIIME 2 development team (Bolyen et al., 2019, Nature Biotechnology) for providing this comprehensive microbiome analysis platform.
+
+# Contributors
+* Laura Heiß | 211567@fhwn.ac.at | [LinkedIn](www.linkedin.com/in/
+laura-heiß-863077258)
+* Isabella Pauser | 116914@fhwn.ac.at | 
