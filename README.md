@@ -242,8 +242,8 @@ downstream analyses.
 
 Before running this script, review the **"Frequency per sample"** summaries of:
 
-- `asv-table-bio.qza`
-- `otu-table-bio.qza`
+- asv-table-bio.qza
+- otu-table-bio.qza
 
 Choose a `--p-max-depth` value that is:
 
@@ -260,17 +260,17 @@ diversity metrics are computed, and the average values are plotted.
 ### Input  
 (from `project/outputs/07.0_filter-for-div/`, `project/outputs/07_phylo-trees/`, and `project/data/processed/`)
 
-- `asv-table-bio.qza`  
-- `otu-table-bio.qza`  
-- `asv-rooted-tree.qza`  
-- `otu-rooted-tree.qza`  
-- `sample-metadata.tsv`
+- asv-table-bio.qza  
+- otu-table-bio.qza 
+- asv-rooted-tree.qza  
+- otu-rooted-tree.qza  
+- sample-metadata.tsv
 
 ### Output  
 (saved in `project/outputs/08_alpha-rarefaction/`)
 
-- `asv-alpha-rarefaction.qzv`  
-- `otu-alpha-rarefaction.qzv`
+- asv-alpha-rarefaction.qzv  
+- otu-alpha-rarefaction.qzv
 
 ### Interpretation of the visualization
 
@@ -343,9 +343,10 @@ data/processed/gg2-taxonomy-asv-tree.qza
 **Sanity check:**
 `qiime tools peek data/processed/gg2-taxonomy-asv-tree.qza`
 
-# Expected: Type: Phylogeny[Rooted]
+**Expected: Type: Phylogeny[Rooted]**
 This tree is optional for classification, but useful for phylogenetic analysis and feature filtering.
-9.3 Taxonomic Classification (ASV + OTU)
+
+***9.3 Taxonomic Classification (ASV + OTU)***
 
 Run:
 `./09_taxonomic-analysis.py`
@@ -368,36 +369,72 @@ All results are stored in:
 `project/outputs/09_taxonomy/`
 
 You will find:
-`asv-taxonomy.qza`
-`asv-taxonomy.qzv`
-`asv-taxa-bar-plots.qzv`
+- asv-taxonomy.qza
+- asv-taxonomy.qzv
+- asv-taxa-bar-plots.qzv`
 
-`otu-taxonomy.qza`
-`otu-taxonomy.qzv`
-`otu-taxa-bar-plots.qzv`
+- otu-taxonomy.qza
+- otu-taxonomy.qzv
+- otu-taxa-bar-plots.qzv
+
 Visualization is available at:
 
 https://view.qiime2.org/
 
 
+## Differential Abundance Testing (ANCOM-BC)
+
+This step identifies features (ASVs and OTUs) that differ significantly in abundance between sample groups.
+
+We use ANCOM-BC, implemented in the QIIME 2 plugin q2-composition, which performs compositionally-aware differential abundance analysis with bias correction.
+
+Script: `scripts/10_ancombc.py`
+
+This script runs ANCOM-BC on both ASV and OTU feature tables using a selected metadata column (e.g. subject).
+
+It performs:
+- ANCOM-BC at feature level (ASVs, OTUs)
+- Taxonomic collapse at level 6 (genus)
+- ANCOM-BC at genus level
+- Barplot generation of significant differential features
+
+*Input*
+
+(from project/outputs/07.0_filter-for-div/, project/outputs/09_taxonomy/, and project/data/processed/)
+
+- asv-table-bio.qza
+- otu-table-bio.qza
+- asv-taxonomy.qza
+- otu-taxonomy.qza
+- sample-metadata.tsv
+
+*Output*
+
+(saved in project/outputs/10_ancombc/)
+
+- asv-ancombc.qza
+- asv-ancombc-barplot.qzv
+- asv-l6-table.qza
+- asv-l6-ancombc.qza
+- asv-l6-barplot.qzv
+
+(Equivalent files for OTU analysis)
 
 
-------------
-# NOTES DELETE
-## Taxonomy
+*Run the script:*
 
-run 09.1
+`cd project/scripts`
+`./10_ancombc.py`
 
+The script will:
 
-cd ~/fallstudie/project
+- Validate input files
+- Run ANCOM-BC
+- Collapse by taxonomy level
+- Produce summary barplots for differentially abundant taxa
 
-mkdir -p data/processed
+**Notes**
 
-# Download the taxonomy tree (Phylogeny[Rooted]) keyed by ASV
-wget http://ftp.microbio.me/greengenes_release/2022.10/2022.10.taxonomy.asv.nwk.qza \
-  -O data/processed/gg2-taxonomy-asv-tree.qza (09.2)
-
-# Sanity check: 
-qiime tools peek data/processed/gg2-taxonomy-asv-tree.qza (09.2)
-  run 09
-
+- ANCOM-BC requires that sample IDs in metadata match sample IDs in the feature tables.
+- If the script reports missing sample IDs, check whether your metadata uses human-readable names but the table uses hashed DADA2 sample IDs.
+- If needed, you can ask for an automated metadata ID-fixing helper script — I can generate it for you (10_fix-metadata.py), but it is not part of your current workflow.
