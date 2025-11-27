@@ -1,3 +1,10 @@
+OPEN QUESTIONS: 
+- Value for --p-max-depth in alpha rarefaction plotting:  
+    - ASV: 7000
+    - OTU: 9000
+- Why download the tree in 09.2?
+
+    
 # Fallstudie: 16S rRNA Microbiome Data Analysis using QIIME 2
 
 This repository contains the workflow and scripts for the 16S rRNA gene sequencing data analysis for the "Fallstudie" project. The analysis is structured into multiple, sequential steps, primarily utilizing the QIIME 2 bioinformatics platform.
