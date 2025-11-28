@@ -1,10 +1,3 @@
-OPEN QUESTIONS: 
-- Value for --p-max-depth in alpha rarefaction plotting:  
-    - ASV: 7000
-    - OTU: 9000
-- Why download the tree in 09.2?
-
-    
 # Fallstudie: 16S rRNA Microbiome Data Analysis using QIIME 2
 
 This repository contains the workflow and scripts for the 16S rRNA gene sequencing data analysis for the "Fallstudie" project. The analysis is structured into multiple, sequential steps, primarily utilizing the QIIME 2 bioinformatics platform.
@@ -13,7 +6,7 @@ This repository contains the workflow and scripts for the 16S rRNA gene sequenci
 
 The raw sequencing data is available at NCBI Sequence Read Archive (SRA) under BioProject accession [PRJNA1370082](https://www.ncbi.nlm.nih.gov/sra/PRJNA1370082). 
 
-All sequencing reads and metadata are also available in this GitHub repository (project/data/raw).
+The metadata is available in this GitHub repository (project/data/raw).
 
 ## Setup 
 
@@ -276,7 +269,7 @@ The alpha rarefaction visualizer repeatedly rarefies the feature table across a 
 depths. At each depth, multiple rarefied tables are generated (`--p-iterations`, default 10),
 diversity metrics are computed, and the average values are plotted.
 
-* Command: `./08_alpha-rarefaction.py`
+* Command: `./08_a-rare.py`
 * Input:
     - project/outputs/07.0_filter-for-div/asv-table-bio.qza  
     - project/outputs/07.0_filter-for-div/otu-table-bio.qza 
@@ -287,6 +280,97 @@ diversity metrics are computed, and the average values are plotted.
     - asv-alpha-rarefaction.qzv  
     - otu-alpha-rarefaction.qzv
 
+## 9 Taxonomic analysis
+
+Assign taxonomy to representative sequences using Greengenes2 Naive Bayes classifier.
+
+* Command: `./09_taxonomy.py`
+* Input: 
+    - project/outputs/07.0_filter-for-div/asv-rep-seqs-bio.qza
+    - project/outputs/07.0_filter-for-div/asv-table-bio.qza
+    - project/outputs/07.0_filter-for-div/otu-rep-seqs-bio.qza
+    - project/outputs/07.0_filter-for-div/otu-table-bio.qza
+    - project/data/processed/sample-metadata.tsv
+    - Greengenes2 2022.10 backbone V4 classifier (downloaded automatically if not present)
+* Output: (project/outputs/09_taxonomy/)
+    - asv-taxonomy.qza
+    - asv-taxonomy.qzv
+    - asv-taxa-barplot.qzv
+    - otu-taxonomy.qza
+    - otu-taxonomy.qzv
+    - otu-taxa-barplot.qzv
+* Notes: 
+    - Uses Greengenes2 2022.10 backbone Naive Bayes classifier trained on V4 region
+    - Classifier is compatible with sklearn 1.4.2
+    - Bar plots provide interactive visualization of taxonomic composition across samples
+
+## 10 Differential abundance testing with ANCOM-BC
+
+Identify microbial features that differ significantly in abundance between disease states, analyzed separately for gum and plaque samples.
+
+### 10.1 Filter feature tables by sample type
+
+Separate samples into gum and plaque groups for independent differential abundance analysis.
+
+* Command: `./10.1_ancombc-filter.py`
+* Input: 
+    - project/outputs/07.0_filter-for-div/asv-table-bio.qza
+    - project/outputs/07.0_filter-for-div/otu-table-bio.qza
+    - project/outputs/09_taxonomy/asv-taxonomy.qza
+    - project/outputs/09_taxonomy/otu-taxonomy.qza
+    - project/data/processed/sample-metadata.tsv
+* Output: (project/outputs/10_ancombc_asv/ and project/outputs/10_ancombc_otu/)
+    - asv_gum_table.qza
+    - asv_plaque_table.qza
+    - otu_gum_table.qza
+    - otu_plaque_table.qza
+* Note: Tables are filtered by sample type to allow separate differential abundance testing for each tissue type
+
+### 10.2 ANCOM-BC differential abundance analysis
+
+Run ANCOM-BC to identify features differentially abundant between disease states within each sample type.
+
+* Command: `./10.2_ancom-bc-diff.py`
+* Input: 
+    - project/outputs/10_ancombc_asv/asv_gum_table.qza
+    - project/outputs/10_ancombc_asv/asv_plaque_table.qza
+    - project/outputs/10_ancombc_otu/otu_gum_table.qza
+    - project/outputs/10_ancombc_otu/otu_plaque_table.qza
+    - project/data/processed/sample-metadata.tsv
+* Output: (project/outputs/10_ancombc_asv/ and project/outputs/10_ancombc_otu/)
+    - ancombc_asv_gum.qza / da_barplot_asv_gum.qzv
+    - ancombc_asv_plaque.qza / da_barplot_asv_plaque.qzv
+    - ancombc_otu_gum.qza / da_barplot_otu_gum.qzv
+    - ancombc_otu_plaque.qza / da_barplot_otu_plaque.qzv
+* Note: 
+    - ANCOM-BC tests for differential abundance by disease_state
+    - Significance threshold set to p < 0.001
+    - Bar plots show log fold change (LFC) of enriched (blue) and depleted (orange) features
+
+### 10.3 Genus-level differential abundance analysis
+
+Collapse feature tables to genus level (taxonomic level 6) and re-run ANCOM-BC for higher-level taxonomic insights.
+
+* Command: `./10.3_ancom-bc-genus.py`
+* Input: 
+    - project/outputs/10_ancombc_asv/asv_gum_table.qza
+    - project/outputs/10_ancombc_asv/asv_plaque_table.qza
+    - project/outputs/10_ancombc_otu/otu_gum_table.qza
+    - project/outputs/10_ancombc_otu/otu_plaque_table.qza
+    - project/outputs/09_taxonomy/asv-taxonomy.qza
+    - project/outputs/09_taxonomy/otu-taxonomy.qza
+    - project/data/processed/sample-metadata.tsv
+* Output: (project/outputs/10_ancombc_asv/ and project/outputs/10_ancombc_otu/)
+    - asv_gum_table_l6.qza / l6_ancombc_asv_gum.qza / l6_da_barplot_asv_gum.qzv
+    - asv_plaque_table_l6.qza / l6_ancombc_asv_plaque.qza / l6_da_barplot_asv_plaque.qzv
+    - otu_gum_table_l6.qza / l6_ancombc_otu_gum.qza / l6_da_barplot_otu_gum.qzv
+    - otu_plaque_table_l6.qza / l6_ancombc_otu_plaque.qza / l6_da_barplot_otu_plaque.qzv
+* Note: 
+    - Genus-level analysis provides broader taxonomic patterns
+    - Level 6 corresponds to genus in Greengenes2 taxonomy
+    - Useful for identifying which bacterial genera are associated with disease
+
+# --- OLD SCRIPTS DESCRIPTION ---
 ### Interpretation of the visualization
 
 **Top plot – Alpha rarefaction curve**  
@@ -412,10 +496,7 @@ It performs:
 - ANCOM-BC requires that sample IDs in metadata match sample IDs in the feature tables.
 - If the script reports missing sample IDs, check whether your metadata uses human-readable names but the table uses hashed DADA2 sample IDs.
 - If needed, you can ask for an automated metadata ID-fixing helper script — I can generate it for you (10_fix-metadata.py), but it is not part of your current workflow.
+# --- OLD SCRIPTS DESCRIPTION ---
 
 # Acknowledgements
 This analysis was conducted as part of the Fallstudie-ILV course at the University of Applied Sciences Wiener Neustadt. The workflow was primarily based on the [QIIME 2 Moving Pictures Tutorial](https://amplicon-docs.qiime2.org/en/latest/tutorials/moving-pictures.html) and the [QIIME 2 Amplicon Documentation](https://amplicon-docs.qiime2.org/en/latest/). Additional guidance was obtained from the [DADA2 Tutorial](https://benjjneb.github.io/dada2/tutorial.html) for denoising parameters and the [Q2 Decontam Tutorial](https://jordenrabasco.github.io/Q2_Decontam_Tutorial.html) for contamination analysis. We acknowledge the QIIME 2 development team for providing this comprehensive microbiome analysis platform.
-
-# Contributors
-* Isabella Pauser | 116914@fhwn.ac.at | 
-* Laura Heiß | 211567@fhwn.ac.at | [LinkedIn](https://www.linkedin.com/in/laura-heiß-863077258)
