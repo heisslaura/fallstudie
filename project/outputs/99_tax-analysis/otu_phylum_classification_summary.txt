@@ -1,0 +1,10 @@
+PHYLUM-LEVEL CLASSIFICATION SUMMARY - OTU ANALYSIS - PHYLUM LEVEL
+======================================================================
+
+Total phyla:              13
+Classified to phylum:     12 (92.3%)
+Unclassified at phylum:   1 (7.7%)
+
+Abundance-weighted Classification:
+  Classified to phylum:   100.0%
+  Unclassified at phylum: 0.0%

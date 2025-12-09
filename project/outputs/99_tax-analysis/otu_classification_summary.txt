@@ -1,0 +1,10 @@
+GENUS-LEVEL CLASSIFICATION SUMMARY - OTU ANALYSIS
+======================================================================
+
+Total features:           99
+Classified to genus:      67 (67.7%)
+Unclassified at genus:    32 (32.3%)
+
+Abundance-weighted Classification:
+  Classified to genus:    68.1%
+  Unclassified at genus:  31.9%

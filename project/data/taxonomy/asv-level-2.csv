@@ -1,0 +1,22 @@
+index,d__Bacteria;p__Firmicutes_D,d__Bacteria;p__Proteobacteria,d__Bacteria;p__Actinobacteriota,d__Bacteria;__,d__Bacteria;p__Fusobacteriota,d__Bacteria;p__Bacteroidota,d__Bacteria;p__Firmicutes_A,d__Bacteria;p__Firmicutes_C,d__Bacteria;p__Patescibacteria,d__Bacteria;p__Campylobacterota,d__Bacteria;p__Desulfobacterota_I,seq-pos,subject,sample-type,tooth-number,tooth-location,replicate,gender,age,disease-state,din
+EF1,5897.0,984.0,955.0,0.0,534.0,347.0,364.0,18.0,80.0,0.0,0.0,18.0,Horse-3,Gum,1.0,uppper jaw left,1.0,S,16.0,diseased,6.9
+EF2,1747.0,1678.0,1451.0,0.0,513.0,467.0,268.0,60.0,141.0,0.0,0.0,19.0,Horse-3,Gum,2.0,upper jaw right,2.0,S,16.0,diseased,7.4
+EF3,1137.0,1540.0,2084.0,16.0,401.0,100.0,64.0,22.0,34.0,0.0,0.0,20.0,Horse-3,Gum,3.0,upper jaw right,3.0,S,16.0,diseased,7.4
+EF4,3452.0,1856.0,1062.0,0.0,452.0,536.0,360.0,26.0,22.0,61.0,0.0,21.0,Horse-3,Gum,1.0,up left,4.0,S,16.0,diseased,6.3
+EP1,4801.0,696.0,522.0,0.0,69.0,46.0,11.0,0.0,0.0,0.0,0.0,13.0,Horse-3,Plaque,1.0,uppper jaw left,1.0,S,16.0,diseased,6.7
+EP2,1931.0,753.0,1624.0,0.0,396.0,140.0,0.0,99.0,13.0,0.0,0.0,14.0,Horse-3,Plaque,2.0,upper jaw right,2.0,S,16.0,diseased,7.5
+EP3,1627.0,1133.0,974.0,0.0,97.0,0.0,0.0,54.0,80.0,0.0,0.0,15.0,Horse-3,Plaque,3.0,upper jaw right,3.0,S,16.0,diseased,6.8
+EP4,4255.0,884.0,317.0,0.0,233.0,86.0,0.0,0.0,0.0,0.0,0.0,16.0,Horse-3,Plaque,1.0,up left,4.0,S,16.0,diseased,6.7
+EP5,5636.0,933.0,686.0,0.0,350.0,177.0,148.0,52.0,55.0,0.0,0.0,17.0,Horse-3,Plaque,1.0,up left,5.0,S,16.0,diseased,6.8
+KF1,922.0,1236.0,622.0,0.0,36.0,88.0,0.0,92.0,0.0,68.0,0.0,7.0,Horse-1,Gum,1.0,upper jaw left,1.0,W,10.0,healthy,7.6
+KP1,1594.0,615.0,1615.0,0.0,0.0,18.0,0.0,82.0,0.0,0.0,0.0,1.0,Horse-1,Plaque,1.0,upper jaw left,1.0,W,10.0,healthy,7.6
+KP2,1810.0,603.0,1944.0,0.0,0.0,109.0,0.0,64.0,0.0,0.0,0.0,2.0,Horse-1,Plaque,2.0,upper jaw rigth,2.0,W,10.0,healthy,6.7
+KP3,454.0,1023.0,614.0,0.0,0.0,0.0,0.0,90.0,0.0,0.0,0.0,3.0,Horse-1,Plaque,3.0,bottom jaw right,3.0,W,10.0,healthy,6.8
+KP4,840.0,1206.0,206.0,0.0,477.0,416.0,388.0,0.0,21.0,24.0,38.0,4.0,Horse-1,Plaque,1.0,up right,4.0,W,10.0,healthy,7.1
+KP5,1260.0,1282.0,395.0,0.0,575.0,517.0,565.0,0.0,40.0,0.0,36.0,5.0,Horse-1,Plaque,2.0,up left,5.0,W,10.0,healthy,7.1
+KP6,1043.0,1150.0,324.0,0.0,537.0,399.0,434.0,0.0,0.0,84.0,0.0,6.0,Horse-1,Plaque,3.0,up left,6.0,W,10.0,healthy,7.0
+TF1,1332.0,2116.0,646.0,0.0,471.0,562.0,345.0,0.0,37.0,137.0,54.0,11.0,Horse-2,Gum,1.0,upper jaw left,1.0,S,24.0,onset,6.9
+TF2,1628.0,1933.0,472.0,0.0,756.0,677.0,257.0,0.0,28.0,106.0,35.0,12.0,Horse-2,Gum,2.0,upper jaw right,2.0,S,24.0,onset,7.3
+TP1,1747.0,1907.0,398.0,0.0,327.0,379.0,59.0,0.0,45.0,0.0,0.0,8.0,Horse-2,Plaque,1.0,upper jaw left,1.0,S,24.0,onset,7.1
+TP2,900.0,1377.0,205.0,0.0,381.0,827.0,177.0,0.0,7.0,90.0,0.0,9.0,Horse-2,Plaque,2.0,upper jaw rigth,2.0,S,24.0,onset,7.0
+TP3,1276.0,786.0,4185.0,0.0,136.0,312.0,0.0,0.0,0.0,17.0,0.0,10.0,Horse-2,Plaque,3.0,bottom jaw right,3.0,S,24.0,onset,7.5

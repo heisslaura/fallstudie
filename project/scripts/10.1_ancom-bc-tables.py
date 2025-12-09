@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script 10: Differential Abundance Testing with ANCOM-BC
+Script 10.1: Differential Abundance Testing with ANCOM-BC
 Filter feature tables by sample type for differential abundance analysis.
 """
 

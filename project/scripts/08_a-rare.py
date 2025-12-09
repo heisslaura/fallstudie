@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Script 07.2: Alpha Rarefaction Plotting
+Script 08: Alpha Rarefaction Plotting
 Generate alpha rarefaction curves to assess sampling depth adequacy.
 
-Task 7.2: Alpha rarefaction plotting
+Task 8: Alpha rarefaction plotting
 - Computes alpha diversity metrics at multiple sampling depths
 - Generates rarefaction curves to assess if sampling depth is adequate
 - Shows if richness plateaus (full observation) or continues increasing

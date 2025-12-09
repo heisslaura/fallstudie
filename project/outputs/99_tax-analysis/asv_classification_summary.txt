@@ -1,0 +1,10 @@
+GENUS-LEVEL CLASSIFICATION SUMMARY - ASV ANALYSIS
+======================================================================
+
+Total features:           58
+Classified to genus:      35 (60.3%)
+Unclassified at genus:    23 (39.7%)
+
+Abundance-weighted Classification:
+  Classified to genus:    68.5%
+  Unclassified at genus:  31.5%

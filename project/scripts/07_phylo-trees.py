@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Script 07.1: Generate Phylogenetic Trees
+Script 07: Generate Phylogenetic Trees
 Builds phylogenetic trees using MAFFT alignment and FastTree for phylogenetic diversity analyses.
 
-Task 7.1: Generate a tree for phylogenetic diversity analyses
+Task 7: Generate a tree for phylogenetic diversity analyses
 - Multiple sequence alignment with MAFFT
 - Masking of highly variable positions
 - Phylogenetic tree construction with FastTree

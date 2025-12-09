@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script 12: ANCOM-BC Differential Abundance Analysis at Genus Level
+Script 10.3: ANCOM-BC Differential Abundance Analysis at Genus Level
 Collapse feature tables to genus level and run ANCOM-BC.
 """
 import os

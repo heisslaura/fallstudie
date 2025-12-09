@@ -1,0 +1,10 @@
+PHYLUM-LEVEL CLASSIFICATION SUMMARY - ASV ANALYSIS - PHYLUM LEVEL
+======================================================================
+
+Total phyla:              11
+Classified to phylum:     10 (90.9%)
+Unclassified at phylum:   1 (9.1%)
+
+Abundance-weighted Classification:
+  Classified to phylum:   100.0%
+  Unclassified at phylum: 0.0%
